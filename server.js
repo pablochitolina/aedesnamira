@@ -6,18 +6,18 @@ var passport = require('passport');
 var servicoController = require('./controllers/servico');
 var userController = require('./controllers/user');
 var authController = require('./controllers/auth');
-var multer  = require('multer');
+var multer = require('multer');
 var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, './uploads/')
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.originalname)
-    }
-  });
-  var upload = multer({ storage: storage }).single('foto');
+  destination: function (req, file, cb) {
+    cb(null, './uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+});
+var upload = multer({ storage: storage }).single('foto');
 
-// Connect to the sagespdb MongoDB
+// Connect to the anmdb MongoDB
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/anmdb');
 
@@ -27,14 +27,12 @@ var app = express();
 
 // Use the body-parser package in our application
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Use the passport package in our application
 app.use(passport.initialize());
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
   res.header("Access-Control-Allow-Headers", "email, idservico, status, iduser, cidade, Content-Type, Authorization");
@@ -45,15 +43,15 @@ var router = express.Router();
 
 router.route('/servicos/uploadimage')
   .post(authController.isAuthenticated, function (req, res) {//authController.isAuthenticated,
-  upload(req, res, function (err) {
-    if (err) {
-      // An error occurred when uploading
-      return res.json({message: "erro", erro: err });
-    }
-    return res.json({message: "success"});
-    // Everything went fine
-  })
-});
+    upload(req, res, function (err) {
+      if (err) {
+        // An error occurred when uploading
+        return res.json({ message: "erro", erro: err });
+      }
+      return res.json({ message: "success" });
+      // Everything went fine
+    })
+  });
 
 router.route('/imagem/:imagename')
   .get(servicoController.getImagem);
@@ -64,20 +62,20 @@ router.route('/servico')
   .get(authController.isAuthenticated, servicoController.getServico)
   .delete(authController.isAuthenticated, servicoController.deleteServico);
 
-  router.route('/servico/:idservico')
+router.route('/servico/:idservico')
   .get(servicoController.getServicoById);
 
-  router.route('/servicos')
+router.route('/servicos')
   .get(authController.isAuthenticated, servicoController.getServicos);
 
-  // Create endpoint handlers for /servicos
+// Create endpoint handlers for /servicos
 router.route('/servicolistlatlngcidade')
-  .get( servicoController.getListServicosLatlngCidade);
+  .get(servicoController.getListServicosLatlngCidade);
 
 router.route('/servicolistlatlnguser')
   .get(authController.isAuthenticated, servicoController.getListServicosLatlngUser);
 
-  router.route('/servicodesc')
+router.route('/servicodesc')
   .put(authController.isAuthenticated, servicoController.putServicoDescricao);
 
 // Create endpoint handlers for /user
@@ -95,7 +93,7 @@ router.route('/userAuth/:token')
 router.route('/forgotPass')
   .get(userController.getForgotPass);
 
-  router.route('/postmessage')
+router.route('/postmessage')
   .post(userController.postMessage);
 
 // Esqueceu a senha
@@ -108,10 +106,9 @@ router.route('/usersList')
 // Register all our routes with /api
 app.use('/api', router);
 
-app.use(express.static(__dirname + '/public')); 
+app.use(express.static(__dirname + '/public'));
 
 // Start the server
-
-app.listen(8080, function(){
-  console.log("Node server listening on port 3000" )
+app.listen(8080, function () {
+  console.log("Node server listening on port 8080")
 });
