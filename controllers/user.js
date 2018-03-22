@@ -34,7 +34,7 @@ exports.postUser = function (req, res) {
         from: "Aedes na Mira <noreplay@aedesnamira.com.br>", // sender address
         to: user.email, // list of receivers
         subject: "Olá " + user.nome, // Subject line
-        html: "<a href='http://www.aedesnamira.net.br/api/userAuth/" + user.token + "'>Ativar Conta Aedes na Mira</a>" // html body
+        html: "<a href='http://www.aedesnamira.com.br/api/userAuth/" + user.token + "'>Ativar Conta Aedes na Mira</a>" // html body
 
       }
 
@@ -167,10 +167,10 @@ exports.getForgotPass = function (req, res) {
         user.token = buffer.toString('hex');
 
         var mailOptions = {
-          from: "Aedes na Mira <noreplay@aedesnamira.net.br>", // sender address
+          from: "Aedes na Mira <noreplay@aedesnamira.com.br>", // sender address
           to: user.email, // list of receivers
           subject: "Olá " + user.nome, // Subject line
-          html: "<b>Sua nova senha temporária: " + user.senhaTemp + "</b><br/><a href='http://www.aedesnamira.net.br/api/forgotPassAct/" + user.token + "'>Click aqui para ativar sua senha temporária</a>" // html body
+          html: "<b>Sua nova senha temporária: " + user.senhaTemp + "</b><br/><a href='http://www.aedesnamira.com.br/api/forgotPassAct/" + user.token + "'>Click aqui para ativar sua senha temporária</a>" // html body
 
         }
 

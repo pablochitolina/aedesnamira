@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var servicoController = require('./controllers/servico');
+var modeloController = require('./controllers/modelo');
 var userController = require('./controllers/user');
 var authController = require('./controllers/auth');
 var multer = require('multer');
@@ -64,6 +65,18 @@ router.route('/servico')
 
 router.route('/servico/:idservico')
   .get(servicoController.getServicoById);
+
+router.route('/modelo/executa')
+  .get(modeloController.executaModelo);
+
+router.route('/modelo/deleta/:data')
+  .get(modeloController.deletaModelo);
+  
+router.route('/modelo/busca/:data')
+  .get(modeloController.buscaResultadoData);
+
+router.route('/modelo/busca/')
+  .get(modeloController.buscaResultadoDia);
 
 router.route('/servicos')
   .get(authController.isAuthenticated, servicoController.getServicos);
