@@ -18,7 +18,6 @@
     $scope.mostraCidades = false;
     $scope.noservico = true;
     $scope.procurando = true;
-    $scope.erroLocaliza = false;
 
     $scope.contNovo = 0;
     $scope.contAtend = 0;
@@ -57,7 +56,6 @@
     carregamapadesc = function (data) {
 
         var marker = new google.maps.Marker({});
-        $scope.erroLocaliza = false;
 
         $scope.mapdesc = new google.maps.Map(document.getElementById('mapdes'), {
             zoom: 17,
@@ -145,8 +143,7 @@
                 $scope.mostraDesc = false;
             }, function (err) {
                 console.log(err)
-                $scope.erroLocaliza = true;
-                $scope.procurando = false;
+                $scope.mapdesc.setCenter(google.maps.LatLng(-28.26278, -52.40667));
             }, { timeout: 10000 });
 
         }
@@ -156,7 +153,6 @@
 
     carregamapa = function (cidade) {
 
-        $scope.erroLocaliza = false;
         $scope.map = new google.maps.Map(document.getElementById('map'), {
             zoom: 13,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -180,10 +176,8 @@
 
 
         }, function (err) {
-            $scope.erroLocaliza = true;
-            $scope.procurando = false;
             console.log(err)
-
+            $scope.mapdesc.setCenter(google.maps.LatLng(-28.26278, -52.40667));
         }, { timeout: 10000 });
 
     }
