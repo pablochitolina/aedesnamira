@@ -177,7 +177,7 @@
 
         }, function (err) {
             console.log(err)
-            $scope.mapdesc.setCenter(google.maps.LatLng(-28.26278, -52.40667));
+            $scope.map.setCenter(google.maps.LatLng(-28.26278, -52.40667));
         }, { timeout: 10000 });
 
     }
