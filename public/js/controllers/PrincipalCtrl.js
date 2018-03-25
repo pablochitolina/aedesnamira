@@ -26,7 +26,7 @@
 
 
     $scope.filtraCidade = function (query) {
-        
+
         if (query.length >= 3) {
             $scope.mostraCidades = true;
             $scope.cidades = JSON.search(Cidades, '//*[contains(Nome,"' + query + '")]');
@@ -45,7 +45,7 @@
     function setMapSize() {
         $scope.mapSize = document.getElementById('divmap').clientWidth;
     }
-    $scope.getCidade = function ( cidade) {
+    $scope.getCidade = function (cidade) {
         angular.element(document.querySelector("#query")).val("");
 
         $scope.mostraCidades = false;
@@ -57,6 +57,7 @@
     carregamapadesc = function (data) {
 
         var marker = new google.maps.Marker({});
+        $scope.erroLocaliza = false;
 
         $scope.mapdesc = new google.maps.Map(document.getElementById('mapdes'), {
             zoom: 17,
@@ -146,7 +147,7 @@
                 console.log(err)
                 $scope.erroLocaliza = true;
                 $scope.procurando = false;
-            }, {timeout:10000});
+            }, { timeout: 10000 });
 
         }
 
@@ -155,7 +156,7 @@
 
     carregamapa = function (cidade) {
 
-
+        $scope.erroLocaliza = false;
         $scope.map = new google.maps.Map(document.getElementById('map'), {
             zoom: 13,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -179,13 +180,11 @@
 
 
         }, function (err) {
-            console.log($scope.erroLocaliza)
             $scope.erroLocaliza = true;
-            console.log($scope.erroLocaliza)
             $scope.procurando = false;
             console.log(err)
-            
-        }, {timeout:10000});
+
+        }, { timeout: 10000 });
 
     }
 
