@@ -63,6 +63,9 @@ router.route('/servico')
   .get(authController.isAuthenticated, servicoController.getServico)
   .delete(authController.isAuthenticated, servicoController.deleteServico);
 
+router.route('/servicoResolver')
+  .put(authController.isAuthenticated, servicoController.putServicoResolvido)
+
 router.route('/servico/:idservico')
   .get(servicoController.getServicoById);
 

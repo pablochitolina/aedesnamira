@@ -25,7 +25,7 @@
 
 
     $scope.filtraCidade = function (query) {
-
+        
         if (query.length >= 3) {
             $scope.mostraCidades = true;
             $scope.cidades = JSON.search(Cidades, '//*[contains(Nome,"' + query + '")]');
@@ -44,7 +44,9 @@
     function setMapSize() {
         $scope.mapSize = document.getElementById('divmap').clientWidth;
     }
-    $scope.getCidade = function (cidade) {
+    $scope.getCidade = function ( cidade) {
+        angular.element(document.querySelector("#query")).val("");
+
         $scope.mostraCidades = false;
         loaded = false;
         $scope.cidadeChamados = ' em ' + cidade.Nome + ' / ' + cidade.Estado;
@@ -80,16 +82,16 @@
                         anchor: new google.maps.Point(20, 68) // anchor
                     };
                     break;
-                case "atendido":
-                    status = "Atendido"
-                    cor = "#ffa700";
-                    icon = {
-                        url: "img/pinyellow.png", // url
-                        scaledSize: new google.maps.Size(41, 68), // scaled size
-                        origin: new google.maps.Point(0, 0), // origin
-                        anchor: new google.maps.Point(20, 68) // anchorr
-                    };
-                    break;
+                /* case "atendido":
+                     status = "Atendido"
+                     cor = "#ffa700";
+                     icon = {
+                         url: "img/pinyellow.png", // url
+                         scaledSize: new google.maps.Size(41, 68), // scaled size
+                         origin: new google.maps.Point(0, 0), // origin
+                         anchor: new google.maps.Point(20, 68) // anchorr
+                     };
+                     break;*/
                 case "resolvido":
                     status = "Resolvido"
                     cor = "#008744";
@@ -100,8 +102,7 @@
                         anchor: new google.maps.Point(20, 68) // anchor
                     };
                     break;
-                default:
-                    icon = 'img/pinred.png';
+
             }
 
             var conteudo = '<div class="googft-info-window" style="line-height: 1.35; overflow: hidden; font-family: sans-serif;  height: 20em; overflow-y: auto;">' +
@@ -140,7 +141,9 @@
                 $scope.mapdesc.setCenter(google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 
                 $scope.mostraDesc = false;
-            });
+            }, function (err) {
+                console.log(err)
+            }, {timeout:10000});
 
         }
 
@@ -164,13 +167,16 @@
                 geocodeLatLng(geolocate);
             } else {
                 var cidadeDado = JSON.search(Cidades, '//*[ID="' + cidade + '"]');
+                console.log(cidade)
 
                 $scope.cidadeChamados = ' em ' + cidadeDado[0].Nome + ' / ' + cidadeDado[0].Estado;
                 $scope.getPontos(cidade);
             }
 
 
-        });
+        }, function (err) {
+            console.log(err)
+        }, {timeout:10000});
 
     }
 
@@ -182,7 +188,7 @@
         $scope.procurando = true;
         loaded = true;
 
-        if (!!navigator.geolocation) {
+        if (navigator.geolocation) {
 
             carregamapa(cidadeParams);
 
@@ -252,6 +258,7 @@
         geocoder.geocode({ 'location': latlng }, function (results, status) {
 
             if (status === google.maps.GeocoderStatus.OK) {
+                console.log("results ", results);
                 if (results[1]) {
                     enderecoReversoCidade = 'nf';
                     enderecoReversoEstado = 'nf';
@@ -339,17 +346,17 @@
                                     anchor: new google.maps.Point(10, 34) // anchor
                                 };
                                 break;
-                            case "atendido":
-                                $scope.contAtend++;
-                                status = "Atendido"
-                                cor = "#ffa700";
-                                icon = {
-                                    url: "img/pinyellow.png", // url
-                                    scaledSize: new google.maps.Size(21, 34), // scaled size
-                                    origin: new google.maps.Point(0, 0), // origin
-                                    anchor: new google.maps.Point(10, 34) // anchor
-                                };
-                                break;
+                            /* case "atendido":
+                                 $scope.contAtend++;
+                                 status = "Atendido"
+                                 cor = "#ffa700";
+                                 icon = {
+                                     url: "img/pinyellow.png", // url
+                                     scaledSize: new google.maps.Size(21, 34), // scaled size
+                                     origin: new google.maps.Point(0, 0), // origin
+                                     anchor: new google.maps.Point(10, 34) // anchor
+                                 };
+                                 break;*/
                             case "resolvido":
                                 $scope.contRes++;
                                 status = "Resolvido"
@@ -361,8 +368,6 @@
                                     anchor: new google.maps.Point(10, 34) // anchor
                                 };
                                 break;
-                            default:
-                                icon = 'img/pinred.png';
                         }
                         var conteudo = '<div class="googft-info-window" style="line-height: 1.35; overflow: hidden; font-family: sans-serif;  height: 20em; overflow-y: auto;">' +
                             '<h2 style="color: ' + cor + '">' + status + '</h2> ' +
@@ -440,83 +445,83 @@
                 adultos.push(item.adultos);
                 prec.push(item.prec);
             });
-            data.push(ovos);
-            data.push(larvas);
-            data.push(pupas);
-            data.push(adultos);
             data.push(prec);
+            data.push(adultos);
+            data.push(pupas);
+            data.push(larvas);
+            data.push(ovos);
 
-            console.log(retorno)
 
             $scope.labels = labels;
-            $scope.series = ['Ovos', 'Larvas', 'Pupas', 'Adultos', 'Precipitação'];
+            $scope.series = ['Precipitação', 'Adultos', 'Pupas', 'Larvas', 'Ovos'];
             $scope.data = data;
             $scope.onClick = function (points, evt) {
                 console.log(points, evt);
             };
-     
-           $scope.datasetOverride = [{
-                label: "Ovos",
-                lineTension: .3,
-                backgroundColor: "rgba(0,200,12,0.0)",
-                borderColor: "rgba(0,200,12,1)",
-                pointRadius: 5,
-                pointBackgroundColor: "rgba(0,200,12,1)",
-                pointBorderColor: "rgba(255,255,255,0.8)",
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(0,200,12,1)",
-                pointHitRadius: 20,
-                pointBorderWidth: 2
-            },{
-                label: "Larvas",
-                lineTension: .3,
-                backgroundColor: "rgba(232,126,12,0.0)",
-                borderColor: "rgba(232,126,12,1)",
-                pointRadius: 5,
-                pointBackgroundColor: "rgba(232,126,12,1)",
-                pointBorderColor: "rgba(255,255,255,0.8)",
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(232,126,12,1)",
-                pointHitRadius: 20,
-                pointBorderWidth: 2
-            },{
-                label: "Pupas",
-                lineTension: .3,
-                backgroundColor: "rgba(255,231,20,0.0)",
-                borderColor: "rgba(255,231,20,1)",
-                pointRadius: 5,
-                pointBackgroundColor: "rgba(255,231,20,1)",
-                pointBorderColor: "rgba(255,255,255,0.8)",
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(255,231,20,1)",
-                pointHitRadius: 20,
-                pointBorderWidth: 2
-            },{
-                label: "Adultos",
-                lineTension: .3,
-                backgroundColor: "rgba(255,0,0,0.0)",
-                borderColor: "rgba(255,0,0,1)",
-                pointRadius: 5,
-                pointBackgroundColor: "rgba(255,0,0,1)",
-                pointBorderColor: "rgba(255,255,255,0.8)",
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(255,0,0,1)",
-                pointHitRadius: 20,
-                pointBorderWidth: 2
-            },{
-                label: "Precipitação",
-                lineTension: .3,
-                backgroundColor: "rgba(2,117,216,0.1)",
-                borderColor: "rgba(2,117,216,1)",
-                pointRadius: 5,
-                pointBackgroundColor: "rgba(2,117,216,1)",
-                pointBorderColor: "rgba(255,255,255,0.8)",
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(2,117,216,1)",
-                pointHitRadius: 20,
-                pointBorderWidth: 2,
-                type: "bar"
-            }];
+
+            $scope.datasetOverride = [
+                {
+                    label: "Precipitação",
+                    lineTension: .3,
+                    backgroundColor: "rgba(2,117,216,0.1)",
+                    borderColor: "rgba(2,117,216,1)",
+                    pointRadius: 4,
+                    pointBackgroundColor: "rgba(2,117,216,1)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
+                    pointHoverRadius: 4,
+                    pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                    pointHitRadius: 20,
+                    pointBorderWidth: 2,
+                    type: "line"
+                }, {
+                    label: "Adultos",
+                    lineTension: .3,
+                    backgroundColor: "rgba(255,0,0,0.0)",
+                    borderColor: "rgba(255,0,0,1)",
+                    pointRadius: 4,
+                    pointBackgroundColor: "rgba(255,0,0,1)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
+                    pointHoverRadius: 4,
+                    pointHoverBackgroundColor: "rgba(255,0,0,1)",
+                    pointHitRadius: 20,
+                    pointBorderWidth: 2
+                }, {
+                    label: "Pupas",
+                    lineTension: .3,
+                    backgroundColor: "rgba(255,231,20,0.0)",
+                    borderColor: "rgba(255,231,20,1)",
+                    pointRadius: 4,
+                    pointBackgroundColor: "rgba(255,231,20,1)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
+                    pointHoverRadius: 4,
+                    pointHoverBackgroundColor: "rgba(255,231,20,1)",
+                    pointHitRadius: 20,
+                    pointBorderWidth: 2
+                }, {
+                    label: "Larvas",
+                    lineTension: .3,
+                    backgroundColor: "rgba(232,126,12,0.0)",
+                    borderColor: "rgba(232,126,12,1)",
+                    pointRadius: 4,
+                    pointBackgroundColor: "rgba(232,126,12,1)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
+                    pointHoverRadius: 4,
+                    pointHoverBackgroundColor: "rgba(232,126,12,1)",
+                    pointHitRadius: 20,
+                    pointBorderWidth: 2
+                }, {
+                    label: "Ovos",
+                    lineTension: .3,
+                    backgroundColor: "rgba(0,200,12,0.0)",
+                    borderColor: "rgba(0,200,12,1)",
+                    pointRadius: 4,
+                    pointBackgroundColor: "rgba(0,200,12,1)",
+                    pointBorderColor: "rgba(255,255,255,0.8)",
+                    pointHoverRadius: 4,
+                    pointHoverBackgroundColor: "rgba(0,200,12,1)",
+                    pointHitRadius: 20,
+                    pointBorderWidth: 2
+                }];
             $scope.options = {
                 scales: {
                     yAxes: [
@@ -535,7 +540,7 @@
                     ]
                 }
             };
-         
+
 
         })
         .error(function (data, status, headers, config) {

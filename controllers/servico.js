@@ -130,6 +130,24 @@ exports.putServicoDescricao = function (req, res) {
 
 };
 
+//Edita descricao servico
+exports.putServicoResolvido = function (req, res) {
+
+  Servico.findById(req.body.idservico , function (err, servico) {
+    if (err)
+      return res.send(err);
+    if (!servico)
+      return res.json({ message: 'noservico' });
+
+    servico.status = "resolvido";
+    servico.save();
+
+    res.json({ message: 'resolverServicoSuccess'});
+
+  });
+
+};
+
 var fs = require('fs');
 var gutil = require('gulp-util');
 
