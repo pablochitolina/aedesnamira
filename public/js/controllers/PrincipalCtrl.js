@@ -18,6 +18,7 @@
     $scope.mostraCidades = false;
     $scope.noservico = true;
     $scope.procurando = true;
+    $scope.erroLocaliza = false;
 
     $scope.contNovo = 0;
     $scope.contAtend = 0;
@@ -143,6 +144,8 @@
                 $scope.mostraDesc = false;
             }, function (err) {
                 console.log(err)
+                $scope.erroLocaliza = true;
+                $scope.procurando = false;
             }, {timeout:10000});
 
         }
@@ -151,6 +154,7 @@
     }
 
     carregamapa = function (cidade) {
+
 
         $scope.map = new google.maps.Map(document.getElementById('map'), {
             zoom: 13,
@@ -175,7 +179,12 @@
 
 
         }, function (err) {
+            console.log($scope.erroLocaliza)
+            $scope.erroLocaliza = true;
+            console.log($scope.erroLocaliza)
+            $scope.procurando = false;
             console.log(err)
+            
         }, {timeout:10000});
 
     }
