@@ -1,5 +1,32 @@
 var Modelo = require('../models/modelo');
 var dateFormat = require('dateformat');
+var schedule = require('node-schedule');
+
+var j = schedule.scheduleJob({ hour: 0, minute: 1 }, function () {
+    
+    var modelo = new Modelo();
+
+            var json = require('./dados-clima.json');
+
+            var totalDias = iniciaModelo(json);
+
+            var data = dateFormat(new Date(), "yyyy-mm-dd");
+            console.log('Executa Modelo: ', data);
+            modelo.data = data;
+
+            for (i = 0; i < totalDias.length; i++) {
+                var cont = new Object();
+                cont.data = totalDias[i].data;
+                cont.prec = parseInt(totalDias[i].prec);
+                cont.ovos = totalDias[i].individuos.ovos;
+                cont.larvas = totalDias[i].individuos.larvas;
+                cont.pupas = totalDias[i].individuos.pupas;
+                cont.adultos = totalDias[i].individuos.adultos;
+                modelo.contagem.push(cont);
+            }
+
+            modelo.save();
+});
 
 exports.executaModelo = function (req, res) {
 
